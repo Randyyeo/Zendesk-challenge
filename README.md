@@ -3,10 +3,10 @@ In this project, I created a **Ticket Viewer** with the main aim of connecting t
 
 ## Installation
 
-Clone our repository or download the zip file.
+Clone the repository or download the zip file.
 
 ```bash
-git clone https://github.com/Randyyeo/Kanban-board.git
+git clone https://github.com/Randyyeo/Zendesk-challenge.git
 ```
 
 Go to the folder of the files in your local and use the package manager npm to install the dependencies for both the ticker folder and the backend folder.
