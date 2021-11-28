@@ -1,6 +1,7 @@
 <template>
   <div class="container w-50">
     <h1 class="text-center my-3">Ticket Viewer</h1>
+    <h4>{{datas.length}} total tickets, {{page_data.length}} shown on this page only</h4>
     <div v-for="(data, index) in page_data" :key="index" style="width: 100%">
       <a :href="'./#/ticket?id=' + data.id">
         {{ data.subject }}
@@ -39,10 +40,10 @@ export default {
       page: 1,
     };
   },
-  async created() {
+  async mounted() {
     var result = await axios.post("http://localhost:4000/tickets");
     this.datas = result.data.requests;
-    console.log(this.datas)
+    
   },
   methods: {
     next(index) {
