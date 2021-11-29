@@ -1,31 +1,42 @@
 <template>
   <div class="container w-50">
-    <h1 class="text-center my-3">Ticket Viewer</h1>
-    <h4>{{datas.length}} total tickets, {{page_data.length}} shown on this page only</h4>
-    <div v-for="(data, index) in page_data" :key="index" style="width: 100%">
-      <a :href="'./#/ticket?id=' + data.id">
-        {{ data.subject }}
-      </a>
-      <hr />
-    </div>
-    <div class="buttons-bar h">
-      <button
-        type="button"
-        class="btn-secondary mr-1 navigation"
-        v-for="index in pages"
-        :key="index"
-        @click="next(index)"
-      >
-        {{ index }}
-      </button>
-
-      <button
-        type="button"
-        class="btn-secondary mr-1 navigation"
-        @click="addone"
-      >
+    <h1 class="text-center my-3" v-if="error">Ticket Viewer</h1>
+    <h1 class="text-danger" v-if="error">Error: Couldn't Authenticate You</h1>
+    <div v-else>
+      <h1 class="text-center my-3">Ticket Viewer</h1>
+      <h4>
+        {{ datas.length }} total tickets, {{ page_data.length }} shown on this
+        page only
+      </h4>
+      <div v-for="(data, index) in page_data" :key="index" style="width: 100%">
+        <a :href="'./#/ticket?id=' + data.id">
+          {{ data.subject }}
+        </a>
+        <p>
+          Updated at {{ data.updated_at.substring(0, 10) }}
+          {{ data.updated_at.substring(11, 19) }}
+        </p>
+        <hr />
+      </div>
+      <div class="buttons-bar h">
+        <button
+          type="button"
+          class="btn-secondary me-1 navigation"
+          v-for="index in pages"
+          :key="index"
+          @click="next(index)"
         >
-      </button>
+          {{ index }}
+        </button>
+
+        <button
+          type="button"
+          class="btn-secondary mr-1 navigation"
+          @click="addone"
+        >
+          >
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -38,39 +49,44 @@ export default {
       datas: null,
       index: 0,
       page: 1,
+      error: false,
     };
   },
   async mounted() {
-    var result = await axios.post("http://localhost:4000/tickets");
-    this.datas = result.data.requests;
-    
+    try {
+      var result = await axios.post("http://localhost:4000/tickets");
+      if (result.data.error){
+        this.error = true;
+      } else {
+        this.datas = result.data.requests
+      }
+      
+    } catch (error) {
+      this.error = true;
+    }
   },
   methods: {
     next(index) {
       this.page = index;
     },
     addone() {
-        
       if (this.page + 1 <= Math.ceil(this.datas.length / 25)) {
-          
         this.page += 1;
       }
     },
   },
   computed: {
     pages() {
-        if (this.datas){
-            return Math.ceil(this.datas.length / 25);
-        } else {
-            return ""
-        }
-      
+      if (this.datas) {
+        return Math.ceil(this.datas.length / 25);
+      } else {
+        return "";
+      }
     },
     page_data() {
       if (this.datas) {
         var end = this.page * 25;
         return this.datas.slice(end - 25, end);
-        
       } else {
         return "";
       }
@@ -87,6 +103,7 @@ export default {
 
 .buttons-bar {
   margin: auto;
+  margin-bottom: 1cm;
 }
 
 .navigation {

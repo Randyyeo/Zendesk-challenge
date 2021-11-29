@@ -24,10 +24,14 @@ app.post("/tickets" , async(req, res)=>{
 
       exec('curl ' + args, function (error, stdout, stderr) {
         res.status(200).send(stdout)
+        
         /* console.log('stderr: ' + stderr);
         if (error !== null) {
           console.log('exec error: ' + error);
         } */
+        if (error !== null) {
+          res.status(401).json({message: "Error has occured"})
+        }
       });
 })
 
