@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const dotenv = require("dotenv")
 
 const app = express();
 app.use(cors());
@@ -11,16 +12,17 @@ app.use((req, res, next) => {
   console.log(`${req.method} - ${req.url}`);
   next();
 });
-
+dotenv.config();
 
 
 var exec = require('child_process').exec;
 
-
+var email = process.env.email;
+var token = process.env.token;
 
 app.post("/tickets" , async(req, res)=>{
   
-      var args = `curl https://zccrandall.zendesk.com/api/v2/requests.json \ -v -u randallysk@gmail.com/token:JcnxEwrORmIwZ1SuvdhA5R4y56lHstKLpxMyG8IM`;
+      var args = `curl https://zccrandall.zendesk.com/api/v2/requests.json \ -v -u ${email}/token:${token}`;
 
       exec('curl ' + args, function (error, stdout, stderr) {
         res.status(200).send(stdout)

@@ -1,5 +1,6 @@
 <template>
   <div class="container w-50" style="margin-top: 5cm;">
+    <h1 v-if="datas">ID: {{datas.id}}</h1>
     <div
       class="card mb-5"
       
@@ -7,8 +8,8 @@
       style="width: 100%"
     >
       <div class="card-body">
-        <h5 class="card-title">{{datas.subject}}</h5>
-        <p class="card-text">
+        <h5 class="card-title" v-if="datas">{{datas.subject}}</h5>
+        <p class="card-text" v-if="datas">
           {{datas.description}}
         </p>
         <a href="/#/" class="btn btn-primary">Go back</a>
@@ -32,7 +33,7 @@ export default {
         var result = await axios.post("http://localhost:4000/tickets/search", data);
         
         this.datas = result.data.request;
-        console.log(this.datas)
+        
         
     }
 };

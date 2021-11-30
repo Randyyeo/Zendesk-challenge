@@ -1,10 +1,13 @@
 <template>
-  <div class="container w-50">
+  <div class="container w-50 mt-5">
+    <div v-if="isLoading" class="loader">
+      <vue-simple-spinner message="Please wait while we retrieve your tickets"></vue-simple-spinner>
+    </div>
     <h1 class="text-center my-3" v-if="error">Ticket Viewer</h1>
-    <h1 class="text-danger" v-if="error">Error: Couldn't Authenticate You</h1>
+    <h1 class="text-danger" v-if="error">{{error}}</h1>
     <div v-else>
       <h1 class="text-center my-3">Ticket Viewer</h1>
-      <h4>
+      <h4 v-if="datas">
         {{ datas.length }} total tickets, {{ page_data.length }} shown on this
         page only
       </h4>
@@ -50,19 +53,21 @@ export default {
       index: 0,
       page: 1,
       error: false,
+      isLoading: true
     };
   },
   async mounted() {
     try {
       var result = await axios.post("http://localhost:4000/tickets");
       if (result.data.error){
-        this.error = true;
+        this.error = "Error: Couldn't Authenticate You";
       } else {
         this.datas = result.data.requests
+        this.isLoading = false;
       }
       
     } catch (error) {
-      this.error = true;
+      this.error = "Error: Response is invalid";
     }
   },
   methods: {
@@ -108,5 +113,11 @@ export default {
 
 .navigation {
   cursor: pointer;
+}
+
+.loader{
+  position: absolute;
+  top: 35%;
+  left: 38%;
 }
 </style>
